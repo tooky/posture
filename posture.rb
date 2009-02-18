@@ -31,6 +31,10 @@ class Image < Sequel::Model
   end
 end
 
+get '/' do
+  "Check your posture?"
+end
+
 post '/' do
   FileUtils.mv params[:data][:tempfile].path, 'public/images/' + params[:data][:filename]
   @image = Image.create(:filename => params[:data][:filename])

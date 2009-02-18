@@ -3,16 +3,22 @@ require 'sinatra'
 require 'json'
 require 'sequel'
 
-configure do
-  DB = Sequel.connect('sqlite://posture.sqlite')
+configure :production do
+  DB= Sequel.connect('postgres://tnjanzrais:h8rDm3NOKP@10.251.153.155/tnjanzrais')
+end
 
+configure :development do
+  DB = Sequel.connect('sqlite://posture.sqlite')
+end
+
+configure do
   begin
     DB.create_table :images do
       primary_key :id
       String :filename
       Time :created_at
     end
-  rescue Sequel::DatabaseError
+  rescue
     # table exists!
   end
 end
@@ -36,7 +42,7 @@ get '/' do
 end
 
 post '/' do
-  FileUtils.mv params[:data][:tempfile].path, 'public/images/' + params[:data][:filename]
+  FileUtils.mv params[:data][:tempfile].path, 'public/images/posture' + params[:data][:filename]
   @image = Image.create(:filename => params[:data][:filename])
   
   content_type 'application/json'

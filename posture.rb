@@ -47,3 +47,7 @@ get '/current' do
   @image = Image.order(:created_at.desc).first
   haml :current
 end
+
+get '/env' do
+  ENV.inspect
+end

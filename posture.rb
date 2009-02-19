@@ -3,15 +3,8 @@ require 'sinatra'
 require 'json'
 require 'sequel'
 
-configure :production do
-  DB= Sequel.connect('postgres://tnjanzrais:h8rDm3NOKP@10.251.153.155/tnjanzrais')
-end
-
-configure :development do
-  DB = Sequel.connect('sqlite://posture.sqlite')
-end
-
 configure do
+  DB = Sequel.connect('sqlite://posture.sqlite')
   begin
     DB.create_table :images do
       primary_key :id
@@ -52,8 +45,4 @@ end
 get '/current' do
   @image = Image.order(:created_at.desc).first
   haml :current
-end
-
-get '/env' do
-  ENV.inspect
 end
